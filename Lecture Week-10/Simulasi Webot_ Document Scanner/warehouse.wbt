@@ -1,0 +1,433 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/FormedConcrete.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/nvidia/jetbot/protos/JetBotRaspberryPiCamera.proto"
+IMPORTABLE EXTERNPROTO "../protos/CardboardBox1.proto"
+IMPORTABLE EXTERNPROTO "../protos/CardboardBox2.proto"
+
+WorldInfo {
+  info [
+    "Modified from the ipr_factor Webots example."
+    "The demo shows..."
+  ]
+  title "Document Scanner"
+  basicTimeStep 20
+  contactProperties [
+    ContactProperties {
+      material1 "object"
+      material2 "gripper"
+      coulombFriction [
+        2
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.1865389302946296 0.09039636765443718 -0.9782799825200449 2.256209865215679
+  position 5.606997338104112 1.7196881027185995 3.411535876657882
+}
+TexturedBackground {
+}
+DirectionalLight {
+  ambientIntensity 1
+  direction 1 1 -1
+  intensity 1.5
+  castShadows TRUE
+}
+DEF FLOOR Solid {
+  rotation 0 0 1 1.5708
+  children [
+    Shape {
+      appearance DEF ROOM_COLOR FormedConcrete {
+      }
+      geometry DEF PLANE Plane {
+        size 20 3
+      }
+    }
+  ]
+  name "floor"
+  boundingObject USE PLANE
+}
+DEF WALLS Solid {
+  children [
+    Pose {
+      translation 0 10 2
+      rotation -1 0 0 -1.57
+      children [
+        DEF WALL_SHAPE Shape {
+          appearance PBRAppearance {
+            baseColor 0.9 0.72 0.72
+            roughness 0.1
+            metalness 0
+          }
+          geometry Plane {
+            size 4 8
+          }
+        }
+      ]
+    }
+    Pose {
+      translation 0 -10 2
+      rotation -1 0 0 1.57
+      children [
+        USE WALL_SHAPE
+      ]
+    }
+  ]
+  name "walls"
+}
+DEF GATE_OUT Solid {
+  translation -0.3 -7.24 0.5
+  children [
+    DEF GATE Group {
+      children [
+        Pose {
+          translation 0.701 -0.001 0.501
+          children [
+            DEF GATE_1 Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Box {
+                size 0.2 5.55 1
+              }
+            }
+          ]
+        }
+        Pose {
+          translation -0.701 -0.001 0.501
+          children [
+            USE GATE_1
+          ]
+        }
+        Pose {
+          translation 0 0 1
+          children [
+            DEF GATE_2 Shape {
+              appearance PBRAppearance {
+                baseColor 0.8 0.8 0.8
+                roughness 1
+                metalness 0
+              }
+              geometry Box {
+                size 1.2 5.55 0.2
+              }
+            }
+          ]
+        }
+        Pose {
+          translation 0 0 0.1
+          children [
+            USE GATE_2
+          ]
+        }
+      ]
+    }
+  ]
+  name "belt_gate_out"
+}
+DEF GATE_IN Solid {
+  translation -0.3 7.27 0.5
+  children [
+    USE GATE
+  ]
+  name "belt_gate_in"
+}
+DEF FOOTWALL Solid {
+  children [
+    Pose {
+      translation 0.25 0 0.4
+      children [
+        DEF FOOTWALL_SHAPE Shape {
+          appearance DEF ROOM_COLOR PBRAppearance {
+            baseColor 0.65098 0.698039 0.854902
+            roughness 0.21471786800000003
+            metalness 0
+          }
+          geometry Box {
+            size 0.04 9 0.8
+          }
+        }
+      ]
+    }
+    Pose {
+      translation -0.85 0 0.4
+      children [
+        USE FOOTWALL_SHAPE
+      ]
+    }
+  ]
+  name "footwall"
+  boundingObject Group {
+    children [
+      Pose {
+        translation 0.25 0 0.4
+        children [
+          USE FOOTWALL_SHAPE
+        ]
+      }
+      Pose {
+        translation -0.85 0 0.4
+        children [
+          USE FOOTWALL_SHAPE
+        ]
+      }
+    ]
+  }
+}
+Robot {
+  translation 0.0009156624156190785 0.009836321839243111 -0.021839026958233698
+  rotation 0.0005611815654379572 0.9999997951331998 0.0003079103911147221 0.005575118545743978
+  children [
+    Track {
+      translation -0.312 0 0.695
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.8 0.8 0.8
+            baseColorMap ImageTexture {
+              url [
+                "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/neuronics/ipr/worlds/textures/conveyor_belt.png"
+              ]
+            }
+            roughness 0.5
+            metalness 0
+            textureTransform TextureTransform {
+              scale 50 1
+              translation -0.17974999999992786 0
+            }
+          }
+          geometry DEF BELT_BO Box {
+            size 20 1 0.06
+          }
+        }
+      ]
+      boundingObject USE BELT_BO
+      physics Physics {
+        density -1
+        mass 10
+      }
+      device [
+        LinearMotor {
+          name "belt_motor"
+        }
+      ]
+      textureAnimation 0.05 0
+    }
+  ]
+  name "Belt"
+  boundingObject Group {
+    children [
+      Pose {
+        translation -0.5 70 0.3375
+        rotation 0 0 1 -1.57
+        children [
+          DEF BELT_SUPPORT Box {
+            size 100 2 0.675
+          }
+        ]
+      }
+      Pose {
+        translation -0.5 -70 0.3375
+        rotation 0 0 1 -1.57
+        children [
+          USE BELT_SUPPORT
+        ]
+      }
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 10
+  }
+  controller "conveyor_belt"
+  supervisor TRUE
+  linearVelocity -0.00039017875923549254 0.00034240448759705505 0.00017327117149986294
+  angularVelocity -4.577579482525502e-07 -0.0006900522974062117 -4.2105113513384835e-08
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0027426043514260715 -0.006727287204679638 -0.00043692571334611515
+  hidden angularVelocity_0 0.01694668131025321 -0.00869705637467337 -0.0016432585546183414
+  translation 0.0006098642323004722 -10.98210885520643 0.30755200054721965
+  rotation 0.6459762942671469 -0.39232176617504666 -0.6548268924152217 2.3995153514884886
+  name "CardboardBox1 1"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 0.008181286736674368 -0.006899122122102693 0.01070940695178534
+  hidden angularVelocity_0 0.02423432472388485 0.011229566974380024 -0.03814277203002581
+  translation -0.3898857707881526 -10.63875133135262 0.3360909978801386
+  rotation -0.9823582926985504 0.006859928470717106 -0.18688265341589597 1.073285704480029
+  name "CardboardBox1 2"
+}
+CardboardBox1 {
+  translation 1.134225101406699 -10.768043106659603 0.21654749816288446
+  rotation -0.10044421048275166 0.7035307248827958 0.7035307240813187 -2.941375751637744
+  name "CardboardBox1 2(1)"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.00576237031470981 -0.011703353946618953 -0.006503562474712458
+  hidden angularVelocity_0 0.0159746217432325 -0.007761828983941968 -0.0011574760479466867
+  translation -0.16208459286048668 -11.118988262812321 0.7317412720841454
+  rotation -0.07226850952978929 -0.8579657096297564 0.5085981750162417 2.892422880177544
+  name "CardboardBox1 3"
+}
+CardboardBox2 {
+  hidden linearVelocity_0 0.003687380838328065 0.0032810307626312384 0.002413869079034754
+  hidden angularVelocity_0 -0.030122663069073255 0.03254613527186556 0.0010177875737948866
+  translation -0.40622732293401165 -10.214765659841792 0.10537658273220828
+  rotation -0.5680941817797378 0.5838226079301372 0.5800173817202925 2.0728398039103704
+  name "CardboardBox2 1(1)"
+}
+CardboardBox2 {
+  translation 0.08894292122335937 -10.32209113957668 0.09254749529928297
+  rotation 0.996562630129822 -0.0585553538138371 0.058602003109686794 -1.573443278407714
+  name "CardboardBox2 1(2)"
+}
+CardboardBox2 {
+  hidden linearVelocity_0 0.000814143275534595 -0.007525968932157002 0.007021429738237401
+  hidden angularVelocity_0 0.037632615034907314 0.003035948087643797 -0.039954595273475814
+  translation -0.5362856445589846 -10.654660269069584 0.6793320134137063
+  rotation 0.3752750489320755 0.5002591203568574 0.7803265022724857 -1.9337479782495421
+  name "CardboardBox2 1(4)"
+}
+CardboardBox2 {
+  translation -0.5046280618536931 -11.519012974037198 0.0925474985151046
+  rotation -0.03916063826479295 -0.7062829920287066 0.7068456547094789 3.0632490733800717
+  name "CardboardBox2 1(3)"
+}
+Robot {
+  translation -0.3 -4.46 1.39
+  rotation -0.5771968951617173 0.577656895078166 0.5771968951617173 2.09394
+  children [
+    JetBotRaspberryPiCamera {
+      fieldOfView 1.7802358370342162
+      width 3280
+      height 2464
+    }
+    Display {
+      name "image display"
+      width 1080
+      height 1080
+    }
+  ]
+  name "Camera"
+  controller "camera"
+  supervisor TRUE
+}
+SpotLight {
+  attenuation 0 0 1
+  beamWidth 0.6
+  cutOffAngle 1.2
+  intensity 0.7
+  location -0.343552 -4.5 1.41
+  castShadows TRUE
+}
+CardboardBox1 {
+  hidden linearVelocity_0 0.0012583764952343512 -0.04554421082762808 -0.0012965491306902548
+  hidden angularVelocity_0 0.0026804355340795446 -0.013310949611219657 0.03817334180261581
+  translation -0.1074037419463635 -10.11947573213397 0.7117180634738576
+  rotation -0.06921388030960991 -0.11989116710461613 -0.9903714186217109 0.13357305349697357
+  name "CardboardBox1 5.742133239061344"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0036173082904409435 -0.0480044912395103 -0.0010640221459870414
+  hidden angularVelocity_0 0.005306074648859446 -0.013801697798158027 0.0018106062189990663
+  translation -0.22249624959084124 -9.667037854609559 0.7032703951112287
+  rotation -0.08634251799647306 0.006366729371029592 -0.9962451677891062 0.13669996086101857
+  name "CardboardBox1 5.445427266222308"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0037465029100739915 -0.0505578947494329 -0.00011651180193255955
+  hidden angularVelocity_0 -0.004032109616685972 -0.01241509985582034 0.0016086602170099894
+  translation -0.17346045171486135 -9.23580970560706 0.7014326236721888
+  rotation -0.0787038465039299 0.04296521072243147 -0.9959717341436267 0.13466154734101105
+  name "CardboardBox1 5.672320068981571"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 0.028295991735439223 -0.08128059564403253 0.0009260196100552617
+  hidden angularVelocity_0 0.008499369977945878 -0.009840931064956857 -0.11198188591545351
+  translation -0.1535814203184753 -8.709676631001898 0.7011653975506613
+  rotation -0.0061151791657756095 -0.0010282497909843333 -0.999980773458239 1.6373452910400548
+  name "CardboardBox1 4.6600291028248595"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 0.0018652384991268388 -0.137043200373498 -0.0003783568922362825
+  hidden angularVelocity_0 -0.05064147186543172 0.00957828135087898 0.000431345694264362
+  translation -0.15646055750355237 -8.16677057669861 0.7011275558018331
+  rotation -0.025990667666699597 0.0427846768250305 -0.9987461922947276 0.1559813217517104
+  name "CardboardBox1 6.126105674500097"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005659320963928755 -0.1496457424123976 0.0002896125812161185
+  hidden angularVelocity_0 -4.377339553675304e-05 -0.0001476706546777268 2.028828065911833e-07
+  translation -0.15693521829403065 -6.667001460598885 0.7010779131482797
+  rotation -0.002827293799651865 0.0033104485917654905 -0.999990523625045 1.4129953812199816
+  name "CardboardBox1 4.869468613064179"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.000606489057170198 -0.1496454130879819 0.0002897454650199061
+  hidden angularVelocity_0 -4.5117567208832456e-05 -0.00031233030469365094 2.0983270476213794e-07
+  translation -0.15675149780745043 -5.167434571703687 0.7010816244867926
+  rotation 0.0028093072854792358 0.0001720494622996909 0.9999960390879347 3.0194217466590176
+  name "CardboardBox1 3.01941960595019"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005757741816382685 -0.1496698103834429 0.00028775709624856844
+  hidden angularVelocity_0 5.3784653092431696e-05 -0.00018804515366022012 -3.4450901714159854e-07
+  translation -0.15697254581632 -3.667665343837534 0.7010874838146924
+  rotation 0.002838157495847887 0.004782494249718487 0.9999845361858254 1.0646653975351812
+  name "CardboardBox1 1.064650843716541"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005653453133123207 -0.14965527055033526 0.00028681551067060286
+  hidden angularVelocity_0 -5.150630867410244e-06 -0.00014600537713892883 -1.3763739552040385e-08
+  translation -0.15758052127414518 -2.168055697730656 0.7010955842887147
+  rotation -0.0028237759659205915 0.0026387358420243904 -0.999992531653337 1.64061652745135
+  name "CardboardBox1 4.642575810304916"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0006178669122320153 -0.14967169339854994 0.00031293128226463914
+  hidden angularVelocity_0 6.127748959076199e-05 -0.00035641996686822076 -7.093116366360515e-08
+  translation -0.15861059637757371 -0.66863155868587 0.7014694663879719
+  rotation 0.0016509112450076313 0.00420387752638153 0.9999898009008913 0.8380726487210194
+  name "CardboardBox1 0.8377580409572782"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005666432591899932 -0.1496429763679307 0.0002844421399117874
+  hidden angularVelocity_0 -5.498551552231405e-05 -0.0001517260558861425 2.657621087347985e-07
+  translation -0.15892890795747 0.830709713784595 0.7011124844786486
+  rotation 0.002824001815588049 0.0022486897178726436 0.9999934841829212 1.7981579303663735
+  name "CardboardBox1 1.7976891295541595"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0006067940124879778 -0.14965494636712526 0.0002828371342081696
+  hidden angularVelocity_0 -6.4733958083930095e-06 -0.00031470286865299105 -6.948390664956997e-09
+  translation -0.1594270163776955 2.3301926290515182 0.7011198981641266
+  rotation 0.0028758125410105603 0.05298211188633061 0.9985913205722816 0.10594060664799963
+  name "CardboardBox1 0.10471975511965978"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0006186281096874913 -0.1496711739407877 0.000309207874491399
+  hidden angularVelocity_0 5.91806848877543e-05 -0.000360194323748556 -8.459393068958144e-08
+  translation -0.16074314050868382 3.829107381163688 0.7014943947014999
+  rotation 0.0016069112693234196 0.0043156231155249 0.9999893965604323 0.8209199733224909
+  name "CardboardBox1 0.8203047484373349"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005791308202834985 -0.14963138819756483 0.00028024395998446405
+  hidden angularVelocity_0 -0.00010196073277127834 -0.00020302122625144093 5.290834411755318e-07
+  translation -0.16231840180644172 5.327376645198424 0.7011454575941114
+  rotation 0.0028168793330190568 0.00141349064819018 0.9999950336051728 2.2161383284083302
+  name "CardboardBox1 2.2165681500327987"
+}
+CardboardBox1 {
+  hidden linearVelocity_0 -0.0005656423586602546 -0.14964506118118576 0.0002808327428782486
+  hidden angularVelocity_0 -4.6534394514331616e-05 -0.0001486199450603647 2.1836708897203917e-07
+  translation -0.15887608085314286 6.825538494215298 0.7011309116607747
+  rotation -0.002827544740212502 0.0033671639896473205 -0.9999903335519843 1.3961309996511975
+  name "CardboardBox1 4.886921905584122"
+}
