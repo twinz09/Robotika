@@ -1,0 +1,80 @@
+# (Langkahi tahap ini jika sudah dilakukan di Chapter sebelumnya)
+# Buka terminal ubuntu dan jalankan perintah berikut untuk clone repository :
+git clone https://github.com/PacktPublishing/Mastering-ROS-for-Robotics-Programming-Third-edition.git ~/Desktop/Ros-Master
+
+
+# Verifikasi hasil clone dengan:
+cd ~/Desktop/Ros-Master
+ls
+
+# (Langkahi tahap ini jika sudah dilakukan di Chapter sebelumnya)
+# Buat workspace dan direktori src:
+mkdir -p ~/catkin_ws/src
+
+
+# Masuk ke direktori workspace dan bangun workspace:
+cd ~/catkin_ws
+catkin_make
+
+
+# Tambahkan workspace ke environment ROS:
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+
+# Pindahkan paket dari repository ke workspace:
+cp -r ~/Desktop/Ros-Master/Chapter3/mastering_ros_demo_pkg ~/catkin_ws/src/
+
+
+# Bangun kembali workspace untuk mendaftarkan paket:
+cd ~/catkin_ws
+catkin_make
+
+
+# Verifikasi bahwa paket sudah terdaftar:
+rospack list | grep mastering_ros_demo_pkg
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+ 
+# Jalankan RViz dengan file URDF di terminal kedua:
+roslaunch mastering_ros_robot_description_pkg view_demo.launch
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan RViz dengan konfigurasi robot beroda di terminal kedua:
+roslaunch mastering_ros_robot_description_pkg view_mobile_robot.launch
+
+
+# Aktifkan GUI joint_state_publisher di terminal ketiga:
+rosrun joint_state_publisher_gui joint_state_publisher_gui
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan RViz dengan konfigurasi lengan robot di terminal kedua:
+roslaunch mastering_ros_robot_description_pkg view_arm.launch
+
+ 
+# Aktifkan GUI joint_state_publisher di terminal ketiga:
+rosrun joint_state_publisher_gui joint_state_publisher_gui
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan RViz dengan konfigurasi pan-tilt di terminal kedua:
+roslaunch mastering_ros_robot_description_pkg view_pan_tilt_urdf.launch
+
+ 
+# Aktifkan GUI joint_state_publisher di terminal ketiga:
+rosrun joint_state_publisher_gui joint_state_publisher_gui
+
+
+# Gunakan slider pada GUI untuk mengontrol pan_joint dan tilt_joint.

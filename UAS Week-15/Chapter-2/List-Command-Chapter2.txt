@@ -1,0 +1,90 @@
+# Clone repository:
+git clone https://github.com/PacktPublishing/Mastering-ROS-for-Robotics-Programming-Third-edition.git ~/Desktop/Ros-Master
+
+
+# Verifikasi hasil clone dengan:
+cd ~/Desktop/Ros-Master
+ls
+
+
+# Buat workspace dan direktori src:
+mkdir -p ~/catkin_ws/src
+
+
+# Masuk ke direktori workspace dan bangun workspace:
+cd ~/catkin_ws
+catkin_make
+
+
+# Tambahkan workspace ke environment ROS:
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+
+# Pindahkan paket dari repository ke workspace:
+cp -r ~/Desktop/Ros-Master/Chapter2/mastering_ros_demo_pkg ~/catkin_ws/src/
+
+
+# Bangun kembali workspace untuk mendaftarkan paket:
+cd ~/catkin_ws
+catkin_make
+
+
+# Verifikasi bahwa paket sudah terdaftar:
+rospack list | grep mastering_ros_demo_pkg
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+ 
+# Jalankan node publisher di terminal kedua:
+rosrun mastering_ros_demo_pkg demo_topic_publisher
+
+ 
+# Jalankan node subscriber di terminal ketiga:
+rosrun mastering_ros_demo_pkg demo_topic_subscriber
+
+
+# Periksa daftar topik:
+rostopic list
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan node publisher di terminal kedua:
+rosrun mastering_ros_demo_pkg demo_msg_publisher
+
+
+# Jalankan node subscriber di terminal ketiga:
+rosrun mastering_ros_demo_pkg demo_msg_subscriber
+
+
+# Periksa topik:
+rostopic list
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan service server di terminal kedua:
+rosrun mastering_ros_demo_pkg demo_service_server
+
+ 
+# Jalankan service client di terminal ketiga:
+rosrun mastering_ros_demo_pkg demo_service_client
+
+
+# Jalankan roscore di terminal pertama:
+roscore
+
+
+# Jalankan action server di terminal kedua:
+rosrun mastering_ros_demo_pkg demo_action_server
+
+ 
+# Jalankan action client di terminal ketiga:
+rosrun mastering_ros_demo_pkg demo_action_client 10 1

@@ -1,0 +1,68 @@
+# (Langkahi tahap ini jika sudah dilakukan di Chapter sebelumnya)
+# Buka terminal ubuntu dan jalankan perintah berikut untuk clone repository :
+git clone https://github.com/PacktPublishing/Mastering-ROS-for-Robotics-Programming-Third-edition.git ~/Desktop/Ros-Master
+
+
+# Verifikasi hasil clone dengan:
+cd ~/Desktop/Ros-Master
+ls
+
+# (Langkahi tahap ini jika sudah dilakukan di Chapter sebelumnya)
+# Buat workspace dan direktori src:
+mkdir -p ~/catkin_ws/src
+
+
+# Masuk ke direktori workspace dan bangun workspace:
+cd ~/catkin_ws
+catkin_make
+
+
+# Tambahkan workspace ke environment ROS:
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+# Pindahkan paket dari repository ke workspace:
+cp -r ~/Desktop/Ros-Master/Chapter4/seven_dof_arm_gazebo ~/catkin_ws/src/
+
+cp -r ~/Desktop/Ros-Master/Chapter4/diff_wheeled_robot_gazebo ~/catkin_ws/src/
+
+
+# Bangun kembali workspace untuk mendaftarkan paket:
+cd ~/catkin_ws
+catkin_make
+
+
+# Verifikasi bahwa paket sudah terdaftar:
+rospack list | grep seven_dof_arm_gazebo
+rospack list | grep diff_wheeled_robot_gazebo
+
+# Jalankan Simulasi Gazebo dengan Kontrol Joint di terminal pertama:
+roslaunch seven_dof_arm_gazebo seven_dof_arm_gazebo_control.launch
+
+ 
+# Kirim Perintah ke Joint Controller di terminal kedua:
+rostopic pub /seven_dof_arm/joint4_position_controller/command std_msgs/Float64 "data: 1.0"
+
+# Ganti /seven_dof_arm/joint4_position_controller/command dengan joint controller lainnya untuk menggerakkan joint lain.
+
+# Perhatikan bagaimana gerakan joint memengaruhi posisi robot.
+
+
+
+# Jalankan Simulasi Gazebo untuk Robot Beroda di terminal pertama:
+roslaunch diff_wheeled_robot_gazebo diff_wheeled_gazebo_full.launch
+
+
+# Tambahkan teleop node di terminal kedua:
+roslaunch diff_wheeled_robot_control keyboard_teleop.launch
+
+
+# Jalankan visualisasi data sensor di RViz di terminal ketiga:
+rviz
+
+
+Pada panel RViz:
+Pilih Fixed Frame: odom
+Klik Add ➔ By Topic ➔ Pilih /scan/LaserScan
+Kontrol robot menggunakan keyboard:
+Gunakan terminal kedua yang tadi sudah dijalankan untuk mengendalikan robot.
